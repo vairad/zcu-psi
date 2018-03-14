@@ -1,3 +1,8 @@
+/* RPC - vytvareni vzdaleneho slovniku - jednoduchý seznam slov implementace
+ * Zpracoval: Radek Vais, A17N0093P
+ * Verze: 12.03.2018
+ */
+
 #include "list.h"
 
 #include <stdio.h>

@@ -1,4 +1,4 @@
-/* RPC - vytvareni vzdaleneho slovniku
+/* RPC - vytvareni vzdaleneho slovniku - server
  * Zpracoval: Radek Vais, A17N0093P
  * Verze: 12.03.2018
  */
@@ -95,7 +95,8 @@ short *add_word_to_vocab_1_svc(WORD_RECORD * word,struct svc_req *b)
 
 REQUEST *find_word_in_vocab_1_svc(WORD_RECORD * word, struct svc_req *b)
 {
-    REQUEST *req = malloc(sizeof(REQUEST));
+    static REQUEST stat_req;
+    REQUEST *req = &stat_req;// = malloc(sizeof(REQUEST));
     initialiseJOBS();
     int job_index = getJobIndex();
     if(job_index == -1)

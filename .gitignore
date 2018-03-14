@@ -1,0 +1,7 @@
+
+*.o
+*xdr*
+vocabulary.h
+*svc*
+*clnt*
+

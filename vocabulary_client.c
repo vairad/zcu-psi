@@ -1,4 +1,4 @@
-/* RPC - vytvareni vzdaleneho slovniku
+/* RPC - vytvareni vzdaleneho slovniku - klient
  * Zpracoval: Radek Vais, A17N0093P
  * Verze: 12.03.2018
  */
