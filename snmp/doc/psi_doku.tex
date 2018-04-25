@@ -1,0 +1,90 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[IL2]{fontenc}
+\usepackage[czech]{babel}
+\usepackage{graphicx}
+
+\begin{document}
+\begin{figure}[h!]
+\centering
+\includegraphics[bb= 0 0 820 445 , width=75mm]{favlogo.jpg}
+\end{figure}
+
+{\centering
+{\huge RPC - Remote procedure call}\\[1em]
+{\large KIV/PSI - 1. semestrální práce}\\[11,5cm]
+}
+
+\begin{tabular}{l r}
+student: & Radek VAIS\\
+os. číslo: & A17N0093P\\
+mail: & vaisr@students.zcu.cz\\
+datum: & 14.3.2018\\
+\end{tabular}
+
+\thispagestyle{empty}
+\newpage
+
+%========================================
+%========================================
+%========================================
+%========================================
+%========================================
+\section{Zadání} %=====================================================================================================
+
+Sestavte program pro vzdálené volání podprogramů, který bude jako parametry přenášet netriviální datové struktury. Vlastní úlohu pro výpočet zvolte dle vlastního uvážení (např. pro zadané vrcholy trojúhelníka vypočtěte jeho obvod, obsah a polohu těžiště). Úlohu musí splňovat následující podmínky:
+
+\begin{enumerate}
+\item Realizujte jednoduchou úlohu synchronního vzdáleného volání.
+\item Připravte specifikační soubor s~definicí rozhraní ( *.x), hlavní program klienta a těla jednotlivých podprogramů. 
+\item Realizujte modifikaci pro asynchronní vzdálené volání. Asynchronnost spočívá v~tom, že po dobu výpočtu funkce ve vzdáleném uzlu klient nečeká na výsledek, ale může provádět jinou činnost. Asynchronní volání lze realizovat tak, že v~prvé fázi se přenesou parametry výpočtu a v~druhé fázi se ze serveru získají výsledky. První fázi lze např. realizovat tak, že nastavíme timeout pro odpověď ze serveru na nulu a vyvoláme RPC. Voláním přeneseme pouze parametry, na odpověď serveru nečekáme. Jiná možnost spočívá ve vytvoření speciální samostatné funkce pro přenos parametrů (server potvrdí příjem). Druhou fázi realizujeme tak, že přenos výsledků provedeme dalším voláním RPC (s~vyhodnocením dosažitelnosti výsledku), nebo tak, že s~v~okamžiku předání výsledků server s~klientem vymění roli - server voláním RPC předá výsledky klientovi, resp. jeho RPC serveru.
+\item Upravte server tak, aby byl schopen zpracovávat déle trvající požadavky paralelně, tj. vlastní těla podprogramů zpracovávat jako samostatná vlákna nebo samostatné procesy.
+\end{enumerate}
+%========================================
+\newpage
+
+\section{Popis řešení}
+
+Výsledný program zpracovává vytváření vzdáleného slovníku pro jednoduchý překlad slov. K~ukládání slov na server a získávání překladů slouží klientská část programu. Uchování slov a vyhledávání překladů realizuje serverová část. V~případě, že se uživatel pokusí na server uložit nový překlad pro existující slovo, dojde k~aktualizaci dle nového překladu. Prázdné hodnoty server odmítá.
+
+Rozhraní RPC obsahuje tři funkce serveru a dvě datové struktury:
+\begin{itemize}
+\item \texttt{short add\_word\_to\_vocab(WORD\_RECORD)}
+\item \texttt{REQUEST find\_word\_in\_vocab(WORD\_RECORD)}
+\item \texttt{WORD\_RECORD get\_find\_result(REQUEST)}
+\item 
+\begin{verbatim}
+WORD_RECORD{
+  char[256] word;
+  char[256] translation;
+  short success_flag;
+}
+\end{verbatim} 
+\item 
+\begin{verbatim}
+REQUEST{
+  int handle;
+  int state;
+}
+\end{verbatim} 
+\end{itemize}
+
+První funkce (\texttt{add\_word\_to\_vocab}) slouží k~ukládání slov na server. V~synchronní části této funkce je ověřeno, zda na server doputoval naplněný požadavek, spuštěno vlákno pro zařazení a uživateli vrácen návratový kód přijetí/chyby. Asynchronní část (průběh vlákna) slouží pro zařazení slova do slovníku. 
+
+Další dvě funkce slouží k~realizaci asynchronního vyhledávání překladů. Vyhledávání iniciuje volání funkce \texttt{find\_word\_in\_vocab}, jejíž návratovou hodnotou je struktura \texttt{REQUEST}, která identifikuje požadavek vyhledávání na serveru a případnou chybu vytváření požadavku. Vyhledávací funkce zároveň spustí vlákno, které paralelně provede vyhledání překladu. Klient pro získání výsledku musí spustit funkci \texttt{get\_find\_result}, jako parametr se předává struktura \texttt{REQUEST}, která identifikuje výsledek nalezený serverem. Výsledkem je naplněná struktura \texttt{WORD\_RECORD}, která obsahuje nastavenou vlajku dle typu výsledku (\emph{úspěch/probíhá vyhledávání/kód chyby}).
+
+Součástí zdrojových kódu je několik konstant, které ovlivňují chvání aplikace: adresa serveru rpc (\texttt{SERVER = [localhost]}), délka slovníkového slova (\texttt{WORD\_LEN = [256]}) a velikost fronty vláken serveru (\texttt{MAX\_JOBS = [128]}).
+
+Pro realizaci paralelních vláken je použita knihovna \texttt{pthread.h}, která implementuje vlákna dle POSIX\footnote{Portable Operating System Interface} pro ošetření kritické sekce přiřazování dostupných vláken z~fronty serveru je využita knihovna \texttt{semaphore.h}, která implementuje semafory dle POSIX.
+
+\subsection{Ovládání}
+
+Cílovou platformou programu je OS Linux s~knihovnou \texttt{pthread} a podporou služeb RPC. Pro překlad je využit program \texttt{make}, vytvořený \texttt{Makefile} využívá program \texttt{rpcgen} pro vygenerování struktur RPC a překladač \texttt{gcc} pro sestavení programů (vocabulary\_client a vocabulary\_server).
+
+Před spuštěním programů slovníku je třeba spustit služby RPC. 
+
+Program klienta lze spustit ve čtyřech módech. První mód vynutíme přepínačem \texttt{-a} a program bude spuštěn v~režimu vytváření slovníku. Program bude vyžadovat zadání slova a jeho překladu. Druhý mód slouží k~vyhledávání, jeho spuštění bude vynuceno přepínačem \texttt{-f}. Program bude vyžadovat zadání slova pro překlad. Poslední dva módy slouží pro generování násobných paralelních dotazů na server. Přepínač \texttt{-g} vynutí spuštění šesti požadavků na přidání slova a přepínač \texttt{-f} vyvolá šest paralelních dotazů na překlad slova "ahoj". Přepínač \texttt{-h} vyvolá nápovědu pro spuštění.
+
+Program serveru po spuštění nevyžaduje interakci s~uživatelem.
+
+\end{document}
