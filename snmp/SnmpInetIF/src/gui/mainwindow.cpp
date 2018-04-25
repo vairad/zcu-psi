@@ -13,15 +13,22 @@
 
 void MainWindow::refresh()
 {
-    if(model){
-        delete model;
-    }
-    CoreInterface::loadState();
-    model = new TreeModel(CoreInterface::getFoundedInterfaces());
-    ui->treeView->setModel(model);
-    QModelIndexList indexes = model->match(model->index(0,0), Qt::DisplayRole, "*", -1, Qt::MatchWildcard|Qt::MatchRecursive);
-    foreach (QModelIndex index, indexes){
-        ui->treeView->expand(index);
+    try
+    {
+        TreeModel *oldModel = model;
+        CoreInterface::loadState();
+        model = new TreeModel(CoreInterface::getFoundedInterfaces());
+        ui->treeView->setModel(model);
+        QModelIndexList indexes = model->match(model->index(0,0), Qt::DisplayRole, "*", -1, Qt::MatchWildcard|Qt::MatchRecursive);
+        foreach (QModelIndex index, indexes){
+            ui->treeView->expand(index);
+        }
+        if(oldModel != NULL){
+            delete oldModel;
+        }
+    }catch(...)
+    {
+        //load state failed there is no data
     }
 }
 
@@ -65,7 +72,7 @@ void MainWindow::handleConnection()
         {
             try{
               CoreInterface::reconnect(details);
-            }catch(std::exception &e){
+            }catch(...){
                 QMessageBox msgBox;
                 msgBox.setText("Connection failed");
                 msgBox.setStandardButtons( QMessageBox::Ok);
@@ -87,7 +94,7 @@ void MainWindow::handleRefresh()
     try{
         ui->progressBar->setVisible(true);
         CoreInterface::loadData();
-    }catch(std::exception &e){
+    }catch(...){
         QMessageBox msgBox;
         msgBox.setText("Connection failed");
         msgBox.setStandardButtons(QMessageBox::Ok);

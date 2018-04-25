@@ -72,8 +72,8 @@ void CoreInterface::reconnect(SnmpConnectionDetails *details)
 
 void CoreInterface::loadData()
 {
-    if(!process->update()){
-        throw new std::exception();
+    if(!process || !process->update()){
+        throw std::runtime_error("Reload error");
     }
    loadState();
 }
@@ -96,6 +96,10 @@ void CoreInterface::loadState()
                                   , QString::fromStdString(iface->getName()))
                         );
         }
+    }
+    else
+    {
+        throw std::runtime_error("Reload error");
     }
 
 }
