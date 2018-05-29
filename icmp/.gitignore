@@ -1,0 +1,6 @@
+# ignore local config
+*.user
+
+# ignore all build folders
+/build*/
+
