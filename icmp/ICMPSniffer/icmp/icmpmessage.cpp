@@ -2,7 +2,10 @@
 
 ICMPMessage::ICMPMessage()
 {
-
+    data = NULL;
+    datalength = 0;
+    header.codes = 0;
+    header.gatewayInternetAddress = 0;
 }
 
 icmpHeader ICMPMessage::getHeader()
@@ -32,7 +35,34 @@ std::list<uint16_t> ICMPMessage::getPaddedData()
         box += low;
         dataList.push_back(box);
     }
-
-
     return dataList;
+}
+
+void ICMPMessage::setContent(std::string strMessage)
+{
+    if(data != NULL){
+        delete data;
+    }
+    datalength = strMessage.length();
+    data = new uint8_t[datalength];
+
+    for (size_t index = 0 ; index < datalength; ++index){
+        uint8_t dataField = strMessage.at(index);
+        data[index] = dataField;
+    }
+}
+
+void ICMPMessage::setIdentifier(uint16_t identifier)
+{
+    header.identifier = identifier;
+}
+
+void ICMPMessage::setSequenceNumber(uint16_t sequencer)
+{
+    header.sequenceNumber = sequencer;
+}
+
+void ICMPMessage::setType(uint8_t type)
+{
+    header.type = type;
 }

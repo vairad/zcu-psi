@@ -4,6 +4,7 @@
 #include <list>
 #include <unistd.h>
 #include <cstdint>
+#include <string>
 
 #include "icmp/icmpdefinitions.h"
 
@@ -18,6 +19,10 @@ public:
     ICMPMessage();
     icmpHeader getHeader();
     std::list<uint16_t> getPaddedData();
+    void setContent(std::string strMessage);
+    void setIdentifier(uint16_t identifier);
+    void setSequenceNumber(uint16_t sequencer);
+    void setType(uint8_t type);
 };
 
 #endif // ICMPMESSAGE_H

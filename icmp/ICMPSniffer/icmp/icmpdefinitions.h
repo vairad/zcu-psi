@@ -39,22 +39,24 @@ enum icmpRedirectCodes{
 };
 
 struct icmpHeader {
-    union{
-        uint16_t codes;
-        struct{
-            uint8_t type;
-            uint8_t code;
+    struct {
+        union {
+            uint16_t codes;
+            struct {
+                uint8_t code; //low
+                uint8_t type; //high
+            };
         };
+        uint16_t checksum;
     };
-    uint16_t checksum;
     union {
         struct{
             uint8_t pointer;
         };
         uint32_t gatewayInternetAddress;
         struct{
-            uint16_t identifier;
-            uint16_t sequenceNumber;
+            uint16_t sequenceNumber; //low
+            uint16_t identifier; //high
         };
     };
 }
