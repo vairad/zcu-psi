@@ -28,14 +28,16 @@ SOURCES += \
         gui/mainwindow.cpp \
     icmp/sniffer.cpp \
     icmp/icmputils.cpp \
-    icmp/icmpmessage.cpp
+    icmp/icmpmessage.cpp \
+    icmp/sender.cpp
 
 HEADERS += \
         gui/mainwindow.h \
     icmp/sniffer.h \
     icmp/icmpdefinitions.h \
     icmp/icmputils.h \
-    icmp/icmpmessage.h
+    icmp/icmpmessage.h \
+    icmp/sender.h
 
 FORMS += \
         gui/mainwindow.ui

@@ -1,8 +1,10 @@
-#include "gui/mainwindow.h"
 #include <QApplication>
 #include <iostream>
+
+#include "gui/mainwindow.h"
 #include "icmp/icmpmessage.h"
 #include "icmp/icmputils.h"
+#include "icmp/sender.h"
 
 int runGuiApp(int argc, char* argv[]){
     QApplication a(argc, argv);
@@ -22,8 +24,14 @@ int testCheckSum(){
     std::cout << std::hex << result;
 }
 
+int testSendEcho(){
+    Sender sender("127.0.0.1");
+    sender.sendMessage(*(new ICMPMessage()));
+}
+
 int main(int argc, char *argv[])
 {
-   // return runGuiApp(argc, argv);
-    return testCheckSum();
+   testCheckSum();
+   testSendEcho();
+  // return runGuiApp(argc, argv);
 }
