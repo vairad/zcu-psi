@@ -26,7 +26,14 @@ int testCheckSum(){
 
 int testSendEcho(){
     Sender sender("127.0.0.1");
-    sender.sendMessage(*(new ICMPMessage()));
+
+    ICMPMessage message;
+    message.setType(icmpMessageType::Echo);
+    message.setContent("TEST");
+    message.setIdentifier(1);
+    message.setSequenceNumber(9);
+
+    sender.sendMessage(message);
 }
 
 int main(int argc, char *argv[])

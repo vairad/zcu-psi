@@ -1,4 +1,5 @@
 #include "icmpmessage.h"
+#include "icmputils.h"
 #include "sender.h"
 #include <iostream>
 
@@ -10,6 +11,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
+#include <string.h>
 
 
 
@@ -36,12 +38,21 @@ Sender::Sender(std::string destination)
 
 void Sender::sendMessage(ICMPMessage &message){
 
-    char buf_outgoing[2048];
-    size_t messageLen;
+    uint8_t buf_outgoing[2048];
+    size_t messageLen = sizeof(icmpHeader) + (message.getDataLength() * sizeof (uint8_t));
+
+//    memset(dest source size);
+    icmpHeader header = message.getHeader();
+    header.checksum = 0;
+
+    memcpy(buf_outgoing, &header, sizeof(icmpHeader));
+    memcpy(buf_outgoing + sizeof(icmpHeader), message.getData(), message.getDataLength() * sizeof (uint8_t));
+
+    header.checksum = ICMPUtils::computeCheckSum((uint16_t *)buf_outgoing, messageLen);
+    memcpy(buf_outgoing, &header, sizeof(icmpHeader));
 
 
-
-    sendto(sock_icmp, "ahoj", 4, 0, (struct sockaddr *) &dst, sizeof (dst));
+    sendto(sock_icmp, buf_outgoing, messageLen, 0, (struct sockaddr *) &dst, sizeof (dst));
 }
 
 Sender::~Sender()

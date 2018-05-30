@@ -43,8 +43,8 @@ struct icmpHeader {
         union {
             uint16_t codes;
             struct {
-                uint8_t code; //low
                 uint8_t type; //high
+                uint8_t code; //low
             };
         };
         uint16_t checksum;
@@ -55,8 +55,8 @@ struct icmpHeader {
         };
         uint32_t gatewayInternetAddress;
         struct{
-            uint16_t sequenceNumber; //low
             uint16_t identifier; //high
+            uint16_t sequenceNumber; //low
         };
     };
 }

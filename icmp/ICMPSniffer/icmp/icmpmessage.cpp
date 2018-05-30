@@ -66,3 +66,11 @@ void ICMPMessage::setType(uint8_t type)
 {
     header.type = type;
 }
+
+uint8_t * ICMPMessage::getData(){
+    return data;
+}
+
+size_t ICMPMessage::getDataLength(){
+    return datalength;
+}

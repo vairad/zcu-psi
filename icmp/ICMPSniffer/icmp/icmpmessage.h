@@ -23,6 +23,8 @@ public:
     void setIdentifier(uint16_t identifier);
     void setSequenceNumber(uint16_t sequencer);
     void setType(uint8_t type);
+    uint8_t *getData();
+    size_t getDataLength();
 };
 
 #endif // ICMPMESSAGE_H
