@@ -25,7 +25,7 @@ int testCheckSum(){
 }
 
 int testSendEcho(){
-    Sender sender("127.0.0.1");
+    Sender sender("seznam.cz");
 
     ICMPMessage message;
     message.setType(icmpMessageType::Echo);

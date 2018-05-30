@@ -27,6 +27,7 @@ public:
     Sender(std::string destination);
     void sendMessage(ICMPMessage &message);
     ~Sender();
+    in_addr resolveHostname(std::string hostname);
 };
 
 #endif // SENDER_H

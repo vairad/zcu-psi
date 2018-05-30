@@ -37,7 +37,8 @@ HEADERS += \
     icmp/icmpdefinitions.h \
     icmp/icmputils.h \
     icmp/icmpmessage.h \
-    icmp/sender.h
+    icmp/sender.h \
+    errorcodes.h
 
 FORMS += \
         gui/mainwindow.ui

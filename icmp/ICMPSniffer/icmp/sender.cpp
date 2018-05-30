@@ -3,7 +3,7 @@
 #include "sender.h"
 #include <iostream>
 
-
+#include <netdb.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
 #include <string.h>
+#include "errorcodes.h"
 
 
 
@@ -22,12 +23,14 @@ Sender::Sender(std::string destination)
 
     this->destination = destination;
 
+    memset(&dst, 0, sizeof dst);
+
     dst.sin_family = AF_INET;
-    dst.sin_addr.s_addr = inet_addr(destination.c_str());
+    dst.sin_addr = resolveHostname(destination.c_str());
 
     if ((sock_icmp = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0){
        std::cerr << "Socket problem";
-       exit(1);
+       exit(SOCKET_ERROR);
     }
 
 //    if ((ret = setsockopt (sock_icmp, IPPROTO_IP, IP_HDRINCL, (char *) &one, sizeof (one))) < 0){
@@ -35,6 +38,21 @@ Sender::Sender(std::string destination)
 //       exit(1);
 //    }
 }
+
+struct in_addr Sender::resolveHostname(std::string hostname){
+    struct hostent *hp = gethostbyname(hostname.c_str());
+    struct in_addr addr;
+    if (hp == NULL) {
+       std::cerr << "Couldn't resolve hostname.";
+       exit(HOSTNAME_ERROR);
+    } else {
+       if ( hp -> h_addr_list[0] != NULL) {
+          addr = *((struct in_addr*)( hp -> h_addr_list[0]));
+       }
+    }
+    return addr;
+}
+
 
 void Sender::sendMessage(ICMPMessage &message){
 
