@@ -25,7 +25,7 @@ int testCheckSum(){
 }
 
 int testSendEcho(){
-    Sender sender("seznam.cz");
+    Sender sender("localhost");
 
     ICMPMessage message;
     message.setType(icmpMessageType::Echo);
@@ -40,5 +40,5 @@ int main(int argc, char *argv[])
 {
    testCheckSum();
    testSendEcho();
-  // return runGuiApp(argc, argv);
+   return runGuiApp(argc, argv);
 }

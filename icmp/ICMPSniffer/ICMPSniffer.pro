@@ -29,7 +29,9 @@ SOURCES += \
     icmp/sniffer.cpp \
     icmp/icmputils.cpp \
     icmp/icmpmessage.cpp \
-    icmp/sender.cpp
+    icmp/sender.cpp \
+    gui/packettablemodel.cpp \
+    gui/guimessage.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -38,7 +40,10 @@ HEADERS += \
     icmp/icmputils.h \
     icmp/icmpmessage.h \
     icmp/sender.h \
-    errorcodes.h
+    errorcodes.h \
+    gui/packettablemodel.h \
+    gui/guimessage.h \
+    gui/packetcolumnorder.h
 
 FORMS += \
         gui/mainwindow.ui
