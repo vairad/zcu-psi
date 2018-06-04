@@ -21,8 +21,22 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    const static double ColumnSourceSize;
+    const static double ColumnDestinationSize;
+    const static double ColumnTypeSize;
+    const static double ColumnCodeSize;
+    const static double ColumnIdentifierSize;
+    const static double ColumnSequenceSize;
+    const static double ColumnDataSize;
+
+
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
+
 private slots:
     void sendEcho();
 };
+
+
 
 #endif // MAINWINDOW_H

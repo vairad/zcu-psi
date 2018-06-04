@@ -17,49 +17,13 @@
    <string>ICMP Generator</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QScrollArea" name="scrollArea">
-    <property name="geometry">
-     <rect>
-      <x>-1</x>
-      <y>-1</y>
-      <width>941</width>
-      <height>581</height>
-     </rect>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>939</width>
-       <height>579</height>
-      </rect>
-     </property>
-     <widget class="QTableView" name="packets">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>0</y>
-        <width>881</width>
-        <height>581</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+      <widget class="QTableView" name="packets"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>900</width>
-     <height>20</height>
-    </rect>
-   </property>
    <widget class="QMenu" name="menuP_ipojen">
     <property name="title">
      <string>Připojení</string>

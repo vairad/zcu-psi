@@ -68,10 +68,8 @@ QVariant PacketTableModel::headerData(int section, Qt::Orientation orientation, 
 
 void PacketTableModel::addNewMessage(GuiMessage message)
 {
-    qDebug("Add message");
+    int rowId = messages.size()-1;
+    beginInsertRows(QModelIndex(), rowId,  rowId);
     messages.push_back(message);
-    QModelIndex lastLineLeft = createIndex(messages.size()-1, 0);
-    QModelIndex lastLineRight = createIndex(messages.size()-1, COLUMN_COUNT-1);
-
-    emit dataChanged(lastLineLeft, lastLineRight);
+    endInsertRows();
 }
