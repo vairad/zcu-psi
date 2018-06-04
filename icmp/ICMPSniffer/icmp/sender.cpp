@@ -1,6 +1,7 @@
-#include "icmpmessage.h"
-#include "icmputils.h"
-#include "sender.h"
+#include "icmp/icmpmessage.h"
+#include "icmp/icmputils.h"
+#include "icmp/sender.h"
+#include "icmp/messenger.h"
 #include <iostream>
 
 #include <netdb.h>
@@ -12,9 +13,23 @@
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
 #include <string.h>
+
+#include "gui/guiinterface.h"
 #include "errorcodes.h"
 
+#include <thread>
+#include <QDebug>
 
+void Sender::run(Sender *object)
+{
+    while (Messenger::send()) {
+        qDebug() << "before lock";
+        ICMPMessage * msgPtr = Messenger::getToSend().pop_msg();
+        qDebug() << "message readed";
+        ICMPMessage msg = *msgPtr;
+        object->sendMessage(msg);
+    }
+}
 
 Sender::Sender(std::string destination)
 {
@@ -37,6 +52,8 @@ Sender::Sender(std::string destination)
 //       std::cerr << "Socket problem - setcockopt returned: " << ret;
 //       exit(1);
 //    }
+    std::thread sender(run, (Sender *)this);
+    sender.detach();
 }
 
 struct in_addr Sender::resolveHostname(std::string hostname){
@@ -55,11 +72,10 @@ struct in_addr Sender::resolveHostname(std::string hostname){
 
 
 void Sender::sendMessage(ICMPMessage &message){
-
+    qDebug()  << "Send";
     uint8_t buf_outgoing[2048];
     size_t messageLen = sizeof(icmpHeader) + (message.getDataLength() * sizeof (uint8_t));
 
-//    memset(dest source size);
     icmpHeader header = message.getHeader();
     header.checksum = 0;
 
@@ -69,8 +85,12 @@ void Sender::sendMessage(ICMPMessage &message){
     header.checksum = ICMPUtils::computeCheckSum((uint16_t *)buf_outgoing, messageLen);
     memcpy(buf_outgoing, &header, sizeof(icmpHeader));
 
-
-    sendto(sock_icmp, buf_outgoing, messageLen, 0, (struct sockaddr *) &dst, sizeof (dst));
+    size_t result = sendto(sock_icmp, buf_outgoing, messageLen, 0, (struct sockaddr *) &dst, sizeof (dst));
+    qDebug() << "sended: " ;
+    qDebug() << result;
+    if(result > 0){
+            GuiInterface::addMessage(message);
+    }
 }
 
 Sender::~Sender()

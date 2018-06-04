@@ -1,5 +1,7 @@
 #include "icmpmessage.h"
 
+#include <cstring>
+
 ICMPMessage::ICMPMessage()
 {
     data = NULL;
@@ -45,6 +47,7 @@ void ICMPMessage::setContent(std::string strMessage)
     }
     datalength = strMessage.length();
     data = new uint8_t[datalength];
+    memset(data, 0 , sizeof(uint8_t) * datalength);
 
     for (size_t index = 0 ; index < datalength; ++index){
         uint8_t dataField = strMessage.at(index);
@@ -65,6 +68,31 @@ void ICMPMessage::setSequenceNumber(uint16_t sequencer)
 void ICMPMessage::setType(uint8_t type)
 {
     header.type = type;
+}
+
+void ICMPMessage::setCode(uint8_t code)
+{
+    header.code = code;
+}
+
+uint16_t ICMPMessage::getIdentifier()
+{
+   return header.identifier;
+}
+
+uint16_t ICMPMessage::getSequenceNumber()
+{
+    return header.sequenceNumber;
+}
+
+uint8_t ICMPMessage::getType()
+{
+   return header.type;
+}
+
+uint8_t ICMPMessage::getCode()
+{
+   return header.code;
 }
 
 uint8_t * ICMPMessage::getData(){

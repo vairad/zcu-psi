@@ -6,6 +6,9 @@
 #include <QTableView>
 #include <QDebug>
 
+#include <icmp/messagefactory.h>
+#include <icmp/messenger.h>
+
 
 const double MainWindow::ColumnSourceSize = 0.2;
 const double MainWindow::ColumnDestinationSize = ColumnSourceSize;
@@ -41,7 +44,7 @@ MainWindow::~MainWindow()
 void MainWindow::sendEcho()
 {
     qDebug("SendEchoAction");
-    model.addNewMessage(*new GuiMessage());
+    Messenger::getToSend().push_msg(MessageFactory::createEchoTest());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {

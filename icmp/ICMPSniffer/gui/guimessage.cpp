@@ -5,13 +5,13 @@
 
 void GuiMessage::fillEmpty()
 {
-    source = "TODO source";
-    destination = "TODO destination";
-    type = "TODO type";
-    code = "TODO code";
-    identifier = "TODO identifier";
-    sequence = "TODO sequence";
-    data = "TODO data";
+    source = "Source host";
+    destination = "Destination host";
+    type = "Type of message";
+    code = "Mesage code";
+    identifier = "Identifier of message";
+    sequence = "Sequence number";
+    data = "Message data";
 }
 
 GuiMessage::GuiMessage()
@@ -25,11 +25,17 @@ GuiMessage::GuiMessage(ICMPMessage &msgIn) : GuiMessage()
     code = QString::number(msgIn.getCode());
     identifier = QString::number(msgIn.getIdentifier());
     sequence = QString::number(msgIn.getSequenceNumber());
+
+    if(msgIn.getType() == icmpMessageType::Echo){
+        char * str = new char[msgIn.getDataLength()+1];
+        memcpy(str, msgIn.getData(), msgIn.getDataLength());
+        str[msgIn.getDataLength()] = 0;
+        data = QString(str);
+    }
 }
 
 QString GuiMessage::getColumn(int index)
 {
-    qDebug("reading message");
     switch (index)
     {
     case PacketColumnOrder::source:

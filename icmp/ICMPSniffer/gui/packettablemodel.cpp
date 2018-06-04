@@ -6,11 +6,6 @@
 PacketTableModel::PacketTableModel(QObject *parent)
     :QAbstractTableModel(parent)
 {
-    GuiMessage mes;
-    messages.push_back(mes);
-    messages.push_back(mes);
-    messages.push_back(mes);
-    messages.push_back(mes);
 }
 
 int PacketTableModel::rowCount(const QModelIndex & /*parent*/) const

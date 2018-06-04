@@ -23,6 +23,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
+LIBS += -pthread
+
 SOURCES += \
         main.cpp \
         gui/mainwindow.cpp \
@@ -31,7 +33,11 @@ SOURCES += \
     icmp/icmpmessage.cpp \
     icmp/sender.cpp \
     gui/packettablemodel.cpp \
-    gui/guimessage.cpp
+    gui/guimessage.cpp \
+    gui/guiinterface.cpp \
+    icmp/messagequeue.cpp \
+    icmp/messenger.cpp \
+    icmp/messagefactory.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -43,7 +49,11 @@ HEADERS += \
     errorcodes.h \
     gui/packettablemodel.h \
     gui/guimessage.h \
-    gui/packetcolumnorder.h
+    gui/packetcolumnorder.h \
+    gui/guiinterface.h \
+    icmp/messagequeue.h \
+    icmp/messenger.h \
+    icmp/messagefactory.h
 
 FORMS += \
         gui/mainwindow.ui

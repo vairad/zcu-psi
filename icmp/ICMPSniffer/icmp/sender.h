@@ -23,11 +23,14 @@ class Sender
     struct ip *ip_hdr_in, *ip_hdr_out;
     struct icmp *icmp_hdr_in, *icmp_hdr_out;
 
+    static void run(Sender * object);
+    void sendMessage(ICMPMessage &message);
+    in_addr resolveHostname(std::string hostname);
+
 public:
     Sender(std::string destination);
-    void sendMessage(ICMPMessage &message);
     ~Sender();
-    in_addr resolveHostname(std::string hostname);
+
 };
 
 #endif // SENDER_H

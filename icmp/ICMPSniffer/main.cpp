@@ -1,18 +1,14 @@
 #include <QApplication>
 #include <iostream>
 
+#include <icmp/messenger.h>
+
+#include "gui/guiinterface.h"
 #include "gui/mainwindow.h"
+#include "gui/packettablemodel.h"
 #include "icmp/icmpmessage.h"
 #include "icmp/icmputils.h"
 #include "icmp/sender.h"
-
-int runGuiApp(int argc, char* argv[]){
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
-    return a.exec();
-}
 
 int testCheckSum(){
     ICMPMessage message;
@@ -27,18 +23,30 @@ int testCheckSum(){
 int testSendEcho(){
     Sender sender("localhost");
 
-    ICMPMessage message;
-    message.setType(icmpMessageType::Echo);
-    message.setContent("TEST");
-    message.setIdentifier(1);
-    message.setSequenceNumber(9);
+    ICMPMessage *message = new ICMPMessage();
+    message->setType(icmpMessageType::Echo);
+    message->setContent("TEST");
+    message->setIdentifier(1);
+    message->setSequenceNumber(9);
 
-    sender.sendMessage(message);
+    Messenger::getToSend().push_msg(message);
 }
+
+int runGuiApp(int argc, char* argv[]){
+    QApplication a(argc, argv);
+
+    Sender sender("localhost");
+
+    PacketTableModel model(0);
+    GuiInterface::setGuiInterface(&model);
+    MainWindow w(model);
+
+    w.show();
+    return a.exec();
+}
+
 
 int main(int argc, char *argv[])
 {
-   testCheckSum();
-   testSendEcho();
    return runGuiApp(argc, argv);
 }
