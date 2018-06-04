@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-GuiMessage::GuiMessage()
+void GuiMessage::fillEmpty()
 {
     source = "TODO source";
     destination = "TODO destination";
@@ -12,7 +12,19 @@ GuiMessage::GuiMessage()
     identifier = "TODO identifier";
     sequence = "TODO sequence";
     data = "TODO data";
-    //todo set fields
+}
+
+GuiMessage::GuiMessage()
+{
+   fillEmpty();
+}
+
+GuiMessage::GuiMessage(ICMPMessage &msgIn) : GuiMessage()
+{
+    type = QString::number(msgIn.getType());
+    code = QString::number(msgIn.getCode());
+    identifier = QString::number(msgIn.getIdentifier());
+    sequence = QString::number(msgIn.getSequenceNumber());
 }
 
 QString GuiMessage::getColumn(int index)

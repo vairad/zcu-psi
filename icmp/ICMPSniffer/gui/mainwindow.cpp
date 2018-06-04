@@ -9,23 +9,22 @@
 
 const double MainWindow::ColumnSourceSize = 0.2;
 const double MainWindow::ColumnDestinationSize = ColumnSourceSize;
-const double MainWindow::ColumnTypeSize = 0.2;
+const double MainWindow::ColumnTypeSize = 0.05;
 const double MainWindow::ColumnCodeSize = ColumnTypeSize;
-const double MainWindow::ColumnIdentifierSize = 0.2;
-const double MainWindow::ColumnSequenceSize = 0.2;
-const double MainWindow::ColumnDataSize = 0.2;
+const double MainWindow::ColumnIdentifierSize = 0.1;
+const double MainWindow::ColumnSequenceSize = 0.1;
+const double MainWindow::ColumnDataSize = 0.3;
 
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(PacketTableModel &model,QWidget *parent) :
     QMainWindow(parent),
+    model(model),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    model = new PacketTableModel(0);
-
     QTableView *view = ui->packets;
-        view->setModel(model);
+        view->setModel(&this->model);
         view->show();
 
         view->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -42,7 +41,7 @@ MainWindow::~MainWindow()
 void MainWindow::sendEcho()
 {
     qDebug("SendEchoAction");
-    model->addNewMessage(*new GuiMessage());
+    model.addNewMessage(*new GuiMessage());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {

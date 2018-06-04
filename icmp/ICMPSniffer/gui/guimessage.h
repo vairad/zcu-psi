@@ -3,6 +3,8 @@
 
  #include <QString>
 
+#include "icmp/icmpmessage.h"
+
 class GuiMessage
 {
 
@@ -14,8 +16,11 @@ class GuiMessage
    QString sequence;
    QString data;
 
+   void fillEmpty();
+
 public:
     GuiMessage();
+    GuiMessage(ICMPMessage &msgIn);
     QString getColumn(int index);
 
 };

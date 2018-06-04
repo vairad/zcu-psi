@@ -13,9 +13,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    PacketTableModel *model;
+    PacketTableModel &model;
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(PacketTableModel &model, QWidget *parent = 0);
     ~MainWindow();
 
 private:
