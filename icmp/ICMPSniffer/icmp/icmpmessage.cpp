@@ -1,6 +1,8 @@
 #include "icmpmessage.h"
+#include "sender.h"
 
 #include <cstring>
+#include <arpa/inet.h>
 
 ICMPMessage::ICMPMessage()
 {
@@ -8,6 +10,18 @@ ICMPMessage::ICMPMessage()
     datalength = 0;
     header.codes = 0;
     header.gatewayInternetAddress = 0;
+    destination = "";
+    dst.sin_family = AF_INET;
+    src.sin_family = AF_INET;
+    source = "Local PC";
+    destination = "Local PC";
+}
+
+ICMPMessage::ICMPMessage(icmpHeader header)
+    : header(header)
+{
+    data = NULL;
+    datalength = 0;
 }
 
 icmpHeader ICMPMessage::getHeader()
@@ -55,6 +69,15 @@ void ICMPMessage::setContent(std::string strMessage)
     }
 }
 
+void ICMPMessage::setData(uint8_t *data, size_t dataLen)
+{
+    if(this->data != NULL){
+        delete this->data;
+    }
+    this->datalength = dataLen;
+    this->data = data;
+}
+
 void ICMPMessage::setIdentifier(uint16_t identifier)
 {
     header.identifier = identifier;
@@ -92,8 +115,64 @@ uint8_t ICMPMessage::getType()
 
 uint8_t ICMPMessage::getCode()
 {
-   return header.code;
+    return header.code;
 }
+
+std::string ICMPMessage::getSource()
+{
+    return source;
+}
+
+std::string ICMPMessage::getDestination()
+{
+    return destination;
+}
+
+
+void ICMPMessage::setSource(in_addr source)
+{
+    this->src.sin_addr = source;
+    char buf[INET_ADDRSTRLEN];
+
+    if (inet_ntop(AF_INET, &source, buf, sizeof(buf)) != NULL)
+         printf("inet addr: %s\n", buf);
+    else {
+         perror("inet_ntop");
+    }
+    this->source = std::string(buf) ;
+}
+
+void ICMPMessage::setDestination(in_addr dest)
+{
+    this->dst.sin_addr = dest;
+    char buf[INET_ADDRSTRLEN];
+
+    if (inet_ntop(AF_INET, &dest, buf, sizeof(buf)) != NULL)
+         printf("inet addr: %s\n", buf);
+    else {
+         perror("inet_ntop");
+    }
+    this->destination = std::string(buf) ;
+}
+
+sockaddr_in *ICMPMessage::getDst()
+{
+    return &dst;
+}
+
+sockaddr_in *ICMPMessage::getSrc()
+{
+    return &src;
+}
+
+void ICMPMessage::setDestination(std::string stringDest)
+{
+    dst.sin_family = AF_INET;
+    dst.sin_addr = Sender::resolveHostname(stringDest.c_str());
+    destination = stringDest;
+}
+
+
 
 uint8_t * ICMPMessage::getData(){
     return data;

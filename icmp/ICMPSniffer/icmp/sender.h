@@ -15,9 +15,6 @@
 class Sender
 {
     int sock_icmp;
-    std::string destination;
-
-    struct sockaddr_in dst;
 
     struct ether_header *eth_hdr;
     struct ip *ip_hdr_in, *ip_hdr_out;
@@ -25,10 +22,10 @@ class Sender
 
     static void run(Sender * object);
     void sendMessage(ICMPMessage &message);
-    in_addr resolveHostname(std::string hostname);
 
 public:
-    Sender(std::string destination);
+    static in_addr resolveHostname(std::string hostname);
+    Sender();
     ~Sender();
 
 };

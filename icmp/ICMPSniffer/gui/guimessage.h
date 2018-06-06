@@ -4,10 +4,11 @@
  #include <QString>
 
 #include "icmp/icmpmessage.h"
+#include "icmp/icmpdefinitions.h"
 
 class GuiMessage
 {
-
+   QString time;
    QString destination;
    QString source;
    QString type;
@@ -17,6 +18,10 @@ class GuiMessage
    QString data;
 
    void fillEmpty();
+
+   static QString resolveICMPCode(uint8_t code, uint8_t type);
+   static QString resolveICMPType(uint8_t type);
+
 
 public:
     GuiMessage();

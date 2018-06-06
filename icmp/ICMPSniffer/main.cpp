@@ -9,6 +9,7 @@
 #include "icmp/icmpmessage.h"
 #include "icmp/icmputils.h"
 #include "icmp/sender.h"
+#include "icmp/reciever.h"
 
 int testCheckSum(){
     ICMPMessage message;
@@ -21,13 +22,14 @@ int testCheckSum(){
 }
 
 int testSendEcho(){
-    Sender sender("localhost");
+    Sender sender();
 
     ICMPMessage *message = new ICMPMessage();
     message->setType(icmpMessageType::Echo);
     message->setContent("TEST");
     message->setIdentifier(1);
     message->setSequenceNumber(9);
+    message->setDestination("localhost");
 
     Messenger::getToSend().push_msg(message);
 }
@@ -35,7 +37,8 @@ int testSendEcho(){
 int runGuiApp(int argc, char* argv[]){
     QApplication a(argc, argv);
 
-    Sender sender("localhost");
+    Sender sender;
+    Reciever reciever;
 
     PacketTableModel model(0);
     GuiInterface::setGuiInterface(&model);

@@ -15,5 +15,6 @@ ICMPMessage *MessageFactory::createEcho(std::string content)
     message->setContent(content);
     message->setIdentifier(1); // todo map host to identifier ... sequence
     message->setSequenceNumber(echoSequence++);
+    message->setDestination("localhost");
     return message;
 }

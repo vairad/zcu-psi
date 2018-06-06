@@ -5,6 +5,12 @@
 #include <unistd.h>
 #include <cstdint>
 #include <string>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip_icmp.h>
 
 #include "icmp/icmpdefinitions.h"
 
@@ -15,11 +21,19 @@ class ICMPMessage
 
     icmpHeader header;
 
+    std::string destination;
+    struct sockaddr_in dst;
+
+    std::string source;
+    struct sockaddr_in src;
+
 public:
     ICMPMessage();
+    ICMPMessage(icmpHeader header);
     icmpHeader getHeader();
     std::list<uint16_t> getPaddedData();
     void setContent(std::string strMessage);
+    void setData(uint8_t *data, size_t dataLen);
     void setIdentifier(uint16_t identifier);
     void setSequenceNumber(uint16_t sequencer);
     void setType(uint8_t type);
@@ -30,6 +44,15 @@ public:
     uint16_t getSequenceNumber();
     uint8_t getType();
     uint8_t getCode();
+    void setSource(struct in_addr source);
+    void setDestination(struct in_addr dest);
+    struct sockaddr_in* getDst();
+    struct sockaddr_in* getSrc();
+    void setDestination(std::string stringDest);
+
+    std::string getDestination();
+    std::string getSource();
+
 };
 
 #endif // ICMPMESSAGE_H

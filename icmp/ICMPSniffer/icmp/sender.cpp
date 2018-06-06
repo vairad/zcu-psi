@@ -31,27 +31,12 @@ void Sender::run(Sender *object)
     }
 }
 
-Sender::Sender(std::string destination)
+Sender::Sender()
 {
-    int ret;
-    int one = 1;
-
-    this->destination = destination;
-
-    memset(&dst, 0, sizeof dst);
-
-    dst.sin_family = AF_INET;
-    dst.sin_addr = resolveHostname(destination.c_str());
-
     if ((sock_icmp = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0){
        std::cerr << "Socket problem";
        exit(SOCKET_ERROR);
     }
-
-//    if ((ret = setsockopt (sock_icmp, IPPROTO_IP, IP_HDRINCL, (char *) &one, sizeof (one))) < 0){
-//       std::cerr << "Socket problem - setcockopt returned: " << ret;
-//       exit(1);
-//    }
     std::thread sender(run, (Sender *)this);
     sender.detach();
 }
@@ -85,7 +70,7 @@ void Sender::sendMessage(ICMPMessage &message){
     header.checksum = ICMPUtils::computeCheckSum((uint16_t *)buf_outgoing, messageLen);
     memcpy(buf_outgoing, &header, sizeof(icmpHeader));
 
-    size_t result = sendto(sock_icmp, buf_outgoing, messageLen, 0, (struct sockaddr *) &dst, sizeof (dst));
+    size_t result = sendto(sock_icmp, buf_outgoing, messageLen, 0, (struct sockaddr *) message.getDst(), sizeof (struct sockaddr_in));
     qDebug() << "sended: " ;
     qDebug() << result;
     if(result > 0){

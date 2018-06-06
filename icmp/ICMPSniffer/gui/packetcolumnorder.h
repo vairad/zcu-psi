@@ -2,7 +2,8 @@
 #define PACKETCOLUMNORDER_H
 
 enum PacketColumnOrder: int{
-    source = 0,
+    timestamp = 0,
+    source,
     destination,
     type,
     code,

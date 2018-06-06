@@ -37,7 +37,8 @@ SOURCES += \
     gui/guiinterface.cpp \
     icmp/messagequeue.cpp \
     icmp/messenger.cpp \
-    icmp/messagefactory.cpp
+    icmp/messagefactory.cpp \
+    icmp/reciever.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS += \
     gui/guiinterface.h \
     icmp/messagequeue.h \
     icmp/messenger.h \
-    icmp/messagefactory.h
+    icmp/messagefactory.h \
+    icmp/reciever.h
 
 FORMS += \
         gui/mainwindow.ui

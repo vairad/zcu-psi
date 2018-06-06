@@ -36,6 +36,8 @@ QVariant PacketTableModel::headerData(int section, Qt::Orientation orientation, 
         if (orientation == Qt::Horizontal) {
             switch (section)
             {
+            case PacketColumnOrder::timestamp:
+                return QString("Čas");
             case PacketColumnOrder::source:
                 return QString("Zdroj");
             case PacketColumnOrder::destination:

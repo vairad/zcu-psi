@@ -8,7 +8,7 @@
 
 class PacketTableModel : public QAbstractTableModel
 {
-    const int COLUMN_COUNT = 7;
+    const int COLUMN_COUNT = 8;
     std::vector<GuiMessage> messages;
 
 public:

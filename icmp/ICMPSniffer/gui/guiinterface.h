@@ -4,10 +4,12 @@
 #include "gui/mainwindow.h"
 #include "icmp/icmpmessage.h"
 
+#include <mutex>
 
 
 class GuiInterface
 {
+    static std::mutex message_lock;
     static PacketTableModel *messages;
 public:
     static void setGuiInterface(PacketTableModel * messages);
