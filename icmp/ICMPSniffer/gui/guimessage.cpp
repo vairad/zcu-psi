@@ -29,8 +29,17 @@ QString GuiMessage::resolveICMPCode(uint8_t code, uint8_t type)
         default:
                 return QString::number(code);
         }
+    case icmpMessageType::Time_Exceeded:
+        switch (code) {
+        case icmpMessageCode::fragment_reassembly_time_exceeded:
+            return "fragmentation";
+        case icmpMessageCode::ttl_exceeded:
+            return "transit";
+        default:
+                return QString::number(code);
+        }
     default:
-        return QString::number(type);
+        return QString::number(code);
     }
 
 }
@@ -44,6 +53,8 @@ QString GuiMessage::resolveICMPType(uint8_t type)
         return "REPLY";
     case icmpMessageType::DestinationUnreachable:
         return "Destination unreachable";
+    case icmpMessageType::Time_Exceeded:
+         return "Time exceeded";
     default:
         return QString::number(type);
     }

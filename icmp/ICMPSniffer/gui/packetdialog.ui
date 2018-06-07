@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PacketDialog</class>
+ <widget class="QDialog" name="PacketDialog">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>429</width>
+    <height>260</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ICMP Packet</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout1">
+       <item>
+        <widget class="QLabel" name="labelHostname">
+         <property name="text">
+          <string>Hostname: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditHostname"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout2">
+       <item>
+        <widget class="QLabel" name="labelType">
+         <property name="text">
+          <string>Type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBoxType">
+         <item>
+          <property name="text">
+           <string>Echo</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Echo reply</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Timestamp</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Destination unreachable</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout3">
+       <item>
+        <widget class="QLabel" name="labelCode">
+         <property name="text">
+          <string>Code</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBoxCode"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout4">
+       <item>
+        <widget class="QLabel" name="labelIdentifier">
+         <property name="text">
+          <string>Identifier</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBoxIdentifier">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout5">
+       <item>
+        <widget class="QLabel" name="labelSequence">
+         <property name="text">
+          <string>Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBoxSequence">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout6">
+       <item>
+        <widget class="QLabel" name="labelEchoData">
+         <property name="text">
+          <string>Echo Data</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEditEchoData"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout7">
+       <item>
+        <widget class="QPushButton" name="cancelButton">
+         <property name="text">
+          <string>Zrušit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="createButton">
+         <property name="text">
+          <string>Vytvořit</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+  <action name="actionSendEchoLocalhost">
+   <property name="text">
+    <string>SendEcho - localhost</string>
+   </property>
+  </action>
+  <action name="actionSendEcho">
+   <property name="text">
+    <string>SendEcho</string>
+   </property>
+  </action>
+  <action name="actionGenerateICMP">
+   <property name="text">
+    <string>Vytvoř ICMP zprávu</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>lineEditHostname</tabstop>
+  <tabstop>comboBoxType</tabstop>
+  <tabstop>comboBoxCode</tabstop>
+  <tabstop>spinBoxIdentifier</tabstop>
+  <tabstop>spinBoxSequence</tabstop>
+  <tabstop>lineEditEchoData</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>createButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

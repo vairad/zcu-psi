@@ -29,12 +29,15 @@ private:
     const static double ColumnSequenceSize;
     const static double ColumnDataSize;
 
+    std::string readUserString(QString valueName);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 
 private slots:
     void sendEcho();
+    void sendEchoLocalhost();
+    void sendGenerateICMP();
 };
 
 

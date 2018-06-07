@@ -2,6 +2,7 @@
 #include "sender.h"
 
 #include <cstring>
+#include <iostream>
 #include <arpa/inet.h>
 
 ICMPMessage::ICMPMessage()
@@ -13,8 +14,8 @@ ICMPMessage::ICMPMessage()
     destination = "";
     dst.sin_family = AF_INET;
     src.sin_family = AF_INET;
-    source = "Local PC";
-    destination = "Local PC";
+    source = "ICMP Generator";
+    destination = "ICMP Generator";
 }
 
 ICMPMessage::ICMPMessage(icmpHeader header)
@@ -80,12 +81,12 @@ void ICMPMessage::setData(uint8_t *data, size_t dataLen)
 
 void ICMPMessage::setIdentifier(uint16_t identifier)
 {
-    header.identifier = identifier;
+    header.identifier = htons(identifier);
 }
 
 void ICMPMessage::setSequenceNumber(uint16_t sequencer)
 {
-    header.sequenceNumber = sequencer;
+    header.sequenceNumber = htons(sequencer);
 }
 
 void ICMPMessage::setType(uint8_t type)
@@ -100,12 +101,12 @@ void ICMPMessage::setCode(uint8_t code)
 
 uint16_t ICMPMessage::getIdentifier()
 {
-   return header.identifier;
+   return ntohs(header.identifier);
 }
 
 uint16_t ICMPMessage::getSequenceNumber()
 {
-    return header.sequenceNumber;
+    return ntohs(header.sequenceNumber);
 }
 
 uint8_t ICMPMessage::getType()
@@ -135,9 +136,9 @@ void ICMPMessage::setSource(in_addr source)
     char buf[INET_ADDRSTRLEN];
 
     if (inet_ntop(AF_INET, &source, buf, sizeof(buf)) != NULL)
-         printf("inet addr: %s\n", buf);
+         std::cout << "Rewrite in_addr to " << buf << std::endl;
     else {
-         perror("inet_ntop");
+         std::cerr << "Could not rewrite in_addr" << std::endl;
     }
     this->source = std::string(buf) ;
 }
@@ -148,9 +149,9 @@ void ICMPMessage::setDestination(in_addr dest)
     char buf[INET_ADDRSTRLEN];
 
     if (inet_ntop(AF_INET, &dest, buf, sizeof(buf)) != NULL)
-         printf("inet addr: %s\n", buf);
+         std::cout << "Rewrite in_addr to " << buf << std::endl;
     else {
-         perror("inet_ntop");
+         std::cerr << "Could not rewrite in_addr" << std::endl;
     }
     this->destination = std::string(buf) ;
 }
@@ -171,7 +172,6 @@ void ICMPMessage::setDestination(std::string stringDest)
     dst.sin_addr = Sender::resolveHostname(stringDest.c_str());
     destination = stringDest;
 }
-
 
 
 uint8_t * ICMPMessage::getData(){

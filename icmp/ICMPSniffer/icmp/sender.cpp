@@ -16,6 +16,7 @@
 
 #include "gui/guiinterface.h"
 #include "errorcodes.h"
+#include "exceptions.h"
 
 #include <thread>
 #include <QDebug>
@@ -46,7 +47,7 @@ struct in_addr Sender::resolveHostname(std::string hostname){
     struct in_addr addr;
     if (hp == NULL) {
        std::cerr << "Couldn't resolve hostname.";
-       exit(HOSTNAME_ERROR);
+       throw DNSException(hostname.c_str());
     } else {
        if ( hp -> h_addr_list[0] != NULL) {
           addr = *((struct in_addr*)( hp -> h_addr_list[0]));
