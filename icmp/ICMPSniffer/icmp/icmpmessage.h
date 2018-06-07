@@ -53,6 +53,10 @@ public:
     std::string getDestination();
     std::string getSource();
 
+    void setTime1();
+    void setTime2();
+    void setTime3();
+    void prepareTimeData();
 };
 
 #endif // ICMPMESSAGE_H

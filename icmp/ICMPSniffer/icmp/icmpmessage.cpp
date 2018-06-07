@@ -1,5 +1,6 @@
 #include "icmpmessage.h"
 #include "sender.h"
+#include "utils.h"
 
 #include <cstring>
 #include <iostream>
@@ -166,6 +167,15 @@ sockaddr_in *ICMPMessage::getSrc()
     return &src;
 }
 
+void ICMPMessage::prepareTimeData(){
+    if(data){
+        delete data;
+    }
+    datalength = 3 * sizeof(uint32_t);
+    data = new uint8_t[datalength];
+    memset(data, 0, datalength);
+}
+
 void ICMPMessage::setDestination(std::string stringDest)
 {
     dst.sin_family = AF_INET;
@@ -173,6 +183,29 @@ void ICMPMessage::setDestination(std::string stringDest)
     destination = stringDest;
 }
 
+void ICMPMessage::setTime1()
+{
+    if(datalength == 3*4){
+        uint32_t * times = (uint32_t *)data;
+        times[0] = htonl(Utils::milisFromMidnight());
+    }
+}
+
+void ICMPMessage::setTime2()
+{
+    if(datalength == 3*4){
+        uint32_t * times = (uint32_t *)data;
+        times[1] = htonl(Utils::milisFromMidnight());
+    }
+}
+
+void ICMPMessage::setTime3()
+{
+    if(datalength == 3*4){
+        uint32_t * times = (uint32_t *)data;
+        times[2] = htonl(Utils::milisFromMidnight());
+    }
+}
 
 uint8_t * ICMPMessage::getData(){
     return data;

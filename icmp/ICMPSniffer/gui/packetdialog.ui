@@ -64,6 +64,11 @@
            <string>Destination unreachable</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Timestamp message</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>

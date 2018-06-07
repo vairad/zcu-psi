@@ -40,7 +40,8 @@ SOURCES += \
     icmp/messagefactory.cpp \
     icmp/reciever.cpp \
     icmp/exceptions.cpp \
-    gui/packetdialog.cpp
+    gui/packetdialog.cpp \
+    icmp/utils.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -59,7 +60,8 @@ HEADERS += \
     icmp/messagefactory.h \
     icmp/reciever.h \
     icmp/exceptions.h \
-    gui/packetdialog.h
+    gui/packetdialog.h \
+    icmp/utils.h
 
 FORMS += \
         gui/mainwindow.ui \

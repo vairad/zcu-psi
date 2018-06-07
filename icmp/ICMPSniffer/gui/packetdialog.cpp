@@ -23,6 +23,12 @@ uint8_t PacketWindow::resolveType()
     if(comboS == "Echo reply"){
         return icmpMessageType::EchoReply;
     }
+    if(comboS == "Timestamp message"){
+        return icmpMessageType::Timestamp;
+    }
+    if(comboS == "Destination uneachable"){
+        return icmpMessageType::DestinationUnreachable;
+    }
     return 0;
 }
 
@@ -74,6 +80,10 @@ void PacketWindow::createICMP()
     if(resolveType() == icmpMessageType::Echo){
         std::string messageS = ui->lineEditEchoData->text().toUtf8().constData();
         message->setContent(messageS);
+    }
+    if(resolveType() == icmpMessageType::Timestamp){
+        message->prepareTimeData();
+        message->setTime1();
     }
 
     correctFlag = true;

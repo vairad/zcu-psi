@@ -5,6 +5,8 @@
 #include <QTime>
 #include <ctype.h>
 
+#include <icmp/utils.h>
+
 void GuiMessage::fillEmpty()
 {
     time = QTime::currentTime().toString("hh:mm:ss.zzz");
@@ -55,6 +57,10 @@ QString GuiMessage::resolveICMPType(uint8_t type)
         return "Destination unreachable";
     case icmpMessageType::Time_Exceeded:
          return "Time exceeded";
+    case icmpMessageType::Timestamp:
+         return "Teimstamp";
+    case icmpMessageType::Timestamp_Reply:
+         return "Teimstamp reply";
     default:
         return QString::number(type);
     }
@@ -85,6 +91,24 @@ GuiMessage::GuiMessage(ICMPMessage &msgIn) : GuiMessage()
             }
         }
         data = QString(str);
+    }
+    if(msgIn.getType() == icmpMessageType::Timestamp || msgIn.getType() == icmpMessageType::Timestamp_Reply){
+        if(msgIn.getDataLength() < 3*sizeof(uint32_t)){
+            data = "Corrupted packet";
+        }else{
+            uint32_t *times = (uint32_t *) msgIn.getData();
+            std::string dataS = "";
+            for(size_t i = 0; i < 3; ++i)
+            {
+                dataS += "Čas ";
+                dataS += std::to_string(i+1);
+                dataS += ". ";
+                dataS += Utils::timeFromMidnight(ntohl(times[i]));
+                dataS += " | ";
+            }
+            data = QString(dataS.c_str());
+        }
+
     }
 }
 
