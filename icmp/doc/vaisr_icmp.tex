@@ -5,6 +5,8 @@
 \usepackage{graphicx}
 
 \begin{document}
+
+
 \begin{figure}[h!]
 \centering
 \includegraphics[bb= 0 0 820 445 , width=75mm]{favlogo.jpg}
@@ -12,7 +14,7 @@
 
 {\centering
 {\huge Internet Control Message Protocol}\\[1em]
-{\large ICMPv4}\\1em
+{\large ICMPv4}\\[1em]
 {\large KIV/PSI - semestrální práce}\\[11,5cm]
 }
 
@@ -160,8 +162,59 @@ Dalším DoS útokem s pomocí ICMP je Black Nurse. Tento útok slouží k zahlc
 
 \section{Implementace protokolu}
 
+V rámci praktické části semestránlí práce vznikl program, který přijímá a zobrazuje příchozí ICMP zprávy. Dále je možné pomocí tohoto programu generovat zprávy Echo, Timestamp a Information request.  
+
 \subsection{Návrh aplikace}
 
+Aplikace se skládá ze dvou modulů \texttt{icmp} a \texttt{gui}. Modul \texttt{icmp} obsahuje definice, logiku přijímání a odesíání zpráv. Modul \texttt{gui} obsahuje uživatelské rozhraní.
+
+\subsubsection{Modul ICMP}
+
+Základem modulu ICMP je definice struktury ICMP záhlaví a následně objektu \texttt{ICMPMessage}, který poskytuje metody, pro nastavení parametrů záhlaví a uložení dat zprávy. Poslední funkcionalitou tohoto objektu je serializace nastavených dat do pole unifikovaných bytů (\texttt{uint8\_t}).
+
+Asynchronní příjem a odesílání zpráv je zaručen paralelním během dvou vláken (jedno pro odesílání, druhé pro příjem). Každé vlákno před před spuštěním vytvoří instanci ICMP socketu pomocí volání \emph{socket()}. Vlákno odesílání pracuje nad frontou zpráv dle návrhového vzoru producent konzument. Vlákno příjmu, neprodleně propisuje prijaté ICMP zprávy do GUI prostřednictvím rozhraní definovaném třídou \texttt{GUIInterface}. Celý proces běhu vláken je spravován pomocí řídící třídy \texttt{Messenger}. Tato třída obsahuje vlajky pro běch jednotlivých vláken unikátní instanci fronty odesílaných zpráv.
+
+Fornta odesílaných zpráv je instance objektu \texttt{MessageQueue}. Tento objekt je implementace blokující fronty. Pro synchronizaci jsou využity prostředky systémové knihoveny C++ \texttt{<mutex>}, pro uložení dat je využita knihovna \texttt{<list>}.
+
+\subsubsection{Modul GUI}
+
+K implementaci uživatelského rozhraní byly použity prostředky knihovny \emph{Qt} verze 5. Uživatelské rozhraní obsahuje dvě okna. Pro strukturální popis oken je použito XML pro definici UI ve frameworku \emph{Qt}\footnote{Definice Qt UI XML - http://doc.qt.io/archives/qt-4.8/designer-ui-file-format.html}. Modul \texttt{gui} dále obsahuje definici datového modelu pro zobrazované zprávy a definici objetů zobrazovaných zpráv. Posledním elementem tohoto modulu je definice rozhraní \texttt{GUIInterface}, které slouží ke komunikaci obou modulů.
+
+\subsection{Překlad}
+
+Cílovou platformou programu je \emph{OS GNU/Linux}, z důvodů závisloti na implementaci knihoven pro práci se sockety (\texttt{<sys/socket.h>}). Další závislostí je přítomnost frameworku Qt na sestavovací stanici.
+
+K překladu je nutné využít mechanismů frameworku \emph{Qt}. Nejprve je potřeba spustit program \texttt{qmake} ve složce s projektovým souborem \texttt{ICMPSniffer.pro}. Výstupem tohoto programu je soubor \emph{Makefile}, který dodržuje závilosti modulů a respektuje nastavení stanice, na které byl spuštěn. Druhým krokem pro sestavení programu je spuštění \texttt{make} nad vygenerovaným \emph{Makefile}. Výstupem tohoto volání je spustitelný program.
+
 \subsection{Ovládání}
+
+Pro běh programu je nutné mít nainstalovanou knihovnu \emph{Qt} ve verzi 5 a vyšší. Program lze spustit z grafického rozhraní i z konzole. V případě spuštění z konzole bude mít uživatel k dispozici log událostí aplikace.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[bb= 0 0 820 445 , width=75mm]{gui.png}
+\label{gui}
+\caption{Uživatelské rozhraní aplikace.}
+\end{figure}
+
+Spuštění programu může selhat v případě, že se nepovede otevřít ICMP socket. Návratový kód programu je \texttt{1} v příadě, že se nepodařilo otevřít socket pro odesílání zpráv a \texttt{3} v případě, že se nepodařilo otevřít a správně nastavit IP socket pro přijímání zpráv.
+
+Po spuštění uživatelského rozhraní se zobrazí okno viz Obrazáek \ref{gui}. Uživatel má k dispozici tři akce. První je odeslat zprávu ECHO s předdefinovaným textem "TEST" na adresu localhost. Druhou je odeslání zprávy ECHO s předdefinovaným textem na adresu dle určení. Poslední možností je vytvořit vlastní ICMP zprávu.
+
+Možnost vytvoření ICMP zprávy poskytuje uživateli možnost generovat tři typy zpráv: Echo, Timestamp a Information request. Uživatel má plnou kontrolu nad vyplněním parametrů jednotlivých zpráv.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[bb= 0 0 820 445 , width=75mm]{gui2.png}
+\label{gui}
+\caption{Rozhraní pro generování packetů.}
+\end{figure}
+
+
+\section{Závěr}
+
+V rámci této práce byl vytvořen program pro příjímání, zobrazování a syntézu ICMP zpráv. Pro zobrazovnání zpráv bylo vytvořeno uživatelské rozhraní ve framworku \emph{Qt}.
+
+Během testování aplikace byla ověřena funkčnost syntétzy a příjmu zpráv ECHO proti standardní implementaci protokolu (např. zařízení na adrese seznam.cz). Pouze v laboratoři byla oveřena funkčnost zpráv Timestamp, proti standardní implementaci ICMP ve Windows 10 stanic v laboratoři. Zpráva Information request byla pouze zachycena a prozkoumána programem \emph{Wireshark}, bohužel standardní Information response se nepodařilo zachytit.
 
 \end{document}
