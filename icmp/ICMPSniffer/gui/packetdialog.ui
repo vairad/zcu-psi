@@ -51,22 +51,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Echo reply</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Timestamp</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Destination unreachable</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Timestamp message</string>
+           <string>Information request</string>
           </property>
          </item>
         </widget>
@@ -83,7 +73,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBoxCode"/>
+        <widget class="QComboBox" name="comboBoxCode">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

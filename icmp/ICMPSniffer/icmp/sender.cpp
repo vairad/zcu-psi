@@ -24,12 +24,13 @@
 void Sender::run(Sender *object)
 {
     while (Messenger::send()) {
-        qDebug() << "before lock";
+        qDebug() << "Before lock";
         ICMPMessage * msgPtr = Messenger::getToSend().pop_msg();
-        qDebug() << "message readed";
+        qDebug() << "Message readed";
         ICMPMessage msg = *msgPtr;
         object->sendMessage(msg);
     }
+    std::cout << "Sender thread end.";
 }
 
 Sender::Sender()
@@ -38,27 +39,12 @@ Sender::Sender()
        std::cerr << "Socket problem";
        exit(SOCKET_ERROR);
     }
-    std::thread sender(run, (Sender *)this);
-    sender.detach();
-}
-
-struct in_addr Sender::resolveHostname(std::string hostname){
-    struct hostent *hp = gethostbyname(hostname.c_str());
-    struct in_addr addr;
-    if (hp == NULL) {
-       std::cerr << "Couldn't resolve hostname.";
-       throw DNSException(hostname.c_str());
-    } else {
-       if ( hp -> h_addr_list[0] != NULL) {
-          addr = *((struct in_addr*)( hp -> h_addr_list[0]));
-       }
-    }
-    return addr;
+    sender = new std::thread(run, (Sender *)this);
 }
 
 
 void Sender::sendMessage(ICMPMessage &message){
-    qDebug()  << "Send";
+    std::cout << "SendMessage";
     uint8_t buf_outgoing[2048];
     size_t messageLen = sizeof(icmpHeader) + (message.getDataLength() * sizeof (uint8_t));
 
@@ -72,8 +58,12 @@ void Sender::sendMessage(ICMPMessage &message){
     memcpy(buf_outgoing, &header, sizeof(icmpHeader));
 
     size_t result = sendto(sock_icmp, buf_outgoing, messageLen, 0, (struct sockaddr *) message.getDst(), sizeof (struct sockaddr_in));
-    qDebug() << "sended: " ;
-    qDebug() << result;
+
+    std::string debugMsg = "sended: ";
+    debugMsg += std::to_string(result);
+    debugMsg += "bytes";
+    std::cout << debugMsg;
+
     if(result > 0){
             GuiInterface::addMessage(message);
     }
@@ -81,5 +71,8 @@ void Sender::sendMessage(ICMPMessage &message){
 
 Sender::~Sender()
 {
+    sender->join();
+    delete sender;
     close(sock_icmp);
+    std::cout << "Sender deleted";
 }

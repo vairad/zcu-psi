@@ -5,7 +5,6 @@
 #include "gui/guiinterface.h"
 #include "icmp/messenger.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -22,32 +21,38 @@
 
 #include <QDebug>
 
-void Reciever::reciever(Reciever *object)
+void Reciever::run(Reciever *object)
 {
     while(Messenger::recieve()){
         object->recieve();
     }
+    std::cout << "Reciever thread end.";
 }
 
 Reciever::Reciever()
 {
-//    if ((sock_eth = socket (AF_INET, SOCK_PACKET, htons (ETH_P_ALL))) < 0)
-//    {
-//       std::cerr << "Socket error";
-//       exit (ETH_SOCKET_ERROR);
-//    }
     if((sock_eth = socket(AF_INET , SOCK_RAW , IPPROTO_ICMP)) < 0){
         std::cerr << "Socket error";
          exit (ETH_SOCKET_ERROR);
     }
 
-    std::thread thread(reciever, this);
-    thread.detach();
+    struct timeval tv;
+    tv.tv_sec = 2;
+    tv.tv_usec = 0;
+    if(setsockopt(sock_eth, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv) < 0){
+        std::cerr << "Socket timeout oprtion error";
+        exit (ETH_SOCKET_ERROR);
+    }
+
+    reciever = new std::thread(run, this);
 }
 
 Reciever::~Reciever()
 {
+   reciever->join();
+   delete reciever;
    close(sock_eth);
+   std::cout << "Reciever deleted";
 }
 
 void Reciever::recieve()
@@ -57,10 +62,13 @@ void Reciever::recieve()
    memset(buf_incoming, 0, sizeof(buf_incoming));
 
    size_t ret = recv(sock_eth, buf_incoming, sizeof (buf_incoming), 0);
+   if(ret == -1){
+       return;
+   }
    size_t dataLen = ret - (sizeof(struct ip) + sizeof( struct icmpHeader));
    if(dataLen > 0){
        std::string msg = "Recieved " + std::to_string(ret) +"bytes with " + std::to_string(dataLen) + "bytes of data.";
-       qDebug() << msg.c_str();
+       std::cout << msg.c_str();
 
        struct icmpHeader *header = new icmpHeader() ;
        memcpy(header, buf_incoming + sizeof (struct ip) , sizeof(struct icmpHeader));

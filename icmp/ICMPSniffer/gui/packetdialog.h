@@ -22,6 +22,7 @@ public:
 
 private slots:
     void createICMP();
+    void typeValidation(int choosed);
 
 private:
 

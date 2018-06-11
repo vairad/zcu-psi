@@ -1,5 +1,11 @@
 #include "packetdialog.h"
 
+#include <icmp/exceptions.h>
+
+#include <iostream>
+
+#include <QMessageBox>
+
 uint8_t PacketWindow::resolveCode()
 {
     QString comboS = ui->comboBoxCode->currentText();
@@ -23,11 +29,14 @@ uint8_t PacketWindow::resolveType()
     if(comboS == "Echo reply"){
         return icmpMessageType::EchoReply;
     }
-    if(comboS == "Timestamp message"){
+    if(comboS == "Timestamp"){
         return icmpMessageType::Timestamp;
     }
     if(comboS == "Destination uneachable"){
         return icmpMessageType::DestinationUnreachable;
+    }
+    if(comboS == "Information request"){
+        return icmpMessageType::Information_Request;
     }
     return 0;
 }
@@ -49,6 +58,7 @@ PacketWindow::PacketWindow(QWidget *parent):
    ui->setupUi(this);
    connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(close()));
    connect(ui->createButton, SIGNAL(clicked()), this, SLOT(createICMP()));
+   connect(ui->comboBoxType, SIGNAL(activated(int)),this,SLOT(typeValidation(int)));
    correctFlag = false;
 }
 
@@ -75,7 +85,22 @@ void PacketWindow::createICMP()
     message->setIdentifier(resolveIdentifier());
     message->setSequenceNumber(resolveSequenceNumber());
     std::string hostname = ui->lineEditHostname->text().toUtf8().constData();
-    message->setDestination(hostname);
+
+    try{
+          message->setDestination(hostname);
+    }catch( DNSException &e){
+        std::string errMsg = "Could not resolve hostname: ";
+        errMsg += e.what();
+        std::cout << errMsg;
+
+        QMessageBox msgBox;
+        msgBox.setText(errMsg.c_str());
+        msgBox.exec();
+
+        correctFlag = false;
+        return;
+    }
+
 
     if(resolveType() == icmpMessageType::Echo){
         std::string messageS = ui->lineEditEchoData->text().toUtf8().constData();
@@ -88,4 +113,15 @@ void PacketWindow::createICMP()
 
     correctFlag = true;
     close();
+}
+
+void PacketWindow::typeValidation(int choosed)
+{
+    if(choosed == 0){
+        ui->lineEditEchoData->clear();
+        ui->lineEditEchoData->setDisabled(false);
+    }else{
+        ui->lineEditEchoData->clear();
+        ui->lineEditEchoData->setDisabled(true);
+    }
 }

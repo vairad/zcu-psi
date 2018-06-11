@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <string>
+#include <netinet/in.h>
 
 class Utils
 {
@@ -11,6 +12,7 @@ class Utils
 public:
     static uint32_t milisFromMidnight();
     static std::string timeFromMidnight(uint32_t);
+    static in_addr resolveHostname(std::string hostname);
 };
 
 #endif // UTILS_H

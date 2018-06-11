@@ -45,7 +45,11 @@ int runGuiApp(int argc, char* argv[]){
     MainWindow w(model);
 
     w.show();
-    return a.exec();
+    size_t result = a.exec();
+
+    Messenger::stopMessaging();
+
+    return result;
 }
 
 

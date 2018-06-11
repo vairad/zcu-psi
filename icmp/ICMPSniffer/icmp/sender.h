@@ -4,6 +4,7 @@
 #include "icmp/icmpmessage.h"
 
 #include <string>
+#include <thread>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,8 +24,9 @@ class Sender
     static void run(Sender * object);
     void sendMessage(ICMPMessage &message);
 
+    std::thread *sender;
+
 public:
-    static in_addr resolveHostname(std::string hostname);
     Sender();
     ~Sender();
 

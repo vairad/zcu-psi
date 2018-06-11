@@ -1,6 +1,9 @@
 #include "utils.h"
+#include "exceptions.h"
 
+#include <netdb.h>
 #include <ctime>
+#include <iostream>
 
 std::chrono::system_clock::duration Utils::duration_since_midnight()
 {
@@ -55,3 +58,16 @@ std::string Utils::timeFromMidnight(uint32_t milisFromMidnight)
     return time;
 }
 
+struct in_addr Utils::resolveHostname(std::string hostname){
+    struct hostent *hp = gethostbyname(hostname.c_str());
+    struct in_addr addr;
+    if (hp == NULL) {
+       std::cerr << "Couldn't resolve hostname.";
+       throw DNSException(hostname.c_str());
+    } else {
+       if ( hp -> h_addr_list[0] != NULL) {
+          addr = *((struct in_addr*)( hp -> h_addr_list[0]));
+       }
+    }
+    return addr;
+}

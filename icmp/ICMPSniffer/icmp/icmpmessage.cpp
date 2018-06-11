@@ -179,7 +179,12 @@ void ICMPMessage::prepareTimeData(){
 void ICMPMessage::setDestination(std::string stringDest)
 {
     dst.sin_family = AF_INET;
-    dst.sin_addr = Sender::resolveHostname(stringDest.c_str());
+
+    if(stringDest.length() == 0){
+        memset(&dst, 0, sizeof(dst));
+    }else{
+        dst.sin_addr = Utils::resolveHostname(stringDest.c_str());
+    }
     destination = stringDest;
 }
 
