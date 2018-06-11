@@ -1,6 +1,5 @@
-#include "icmpmessage.h"
-#include "sender.h"
-#include "utils.h"
+#include "icmp/icmpmessage.h"
+#include "icmp/utils.h"
 
 #include <cstring>
 #include <iostream>

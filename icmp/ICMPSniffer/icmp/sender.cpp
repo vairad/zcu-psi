@@ -1,9 +1,13 @@
+#include "icmp/sender.h"
+
 #include "icmp/icmpmessage.h"
 #include "icmp/icmputils.h"
-#include "icmp/sender.h"
 #include "icmp/messenger.h"
-#include <iostream>
+#include "icmp/exceptions.h"
+#include "gui/guiinterface.h"
+#include "errorcodes.h"
 
+#include <iostream>
 #include <netdb.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -13,11 +17,6 @@
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
 #include <string.h>
-
-#include "gui/guiinterface.h"
-#include "errorcodes.h"
-#include "exceptions.h"
-
 #include <thread>
 #include <QDebug>
 
@@ -30,13 +29,13 @@ void Sender::run(Sender *object)
         ICMPMessage msg = *msgPtr;
         object->sendMessage(msg);
     }
-    std::cout << "Sender thread end.";
+    std::cout << "Sender thread end." << std::endl;
 }
 
 Sender::Sender()
 {
     if ((sock_icmp = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0){
-       std::cerr << "Socket problem";
+       std::cerr << "Socket problem"  << std::endl;
        exit(SOCKET_ERROR);
     }
     sender = new std::thread(run, (Sender *)this);
@@ -62,7 +61,7 @@ void Sender::sendMessage(ICMPMessage &message){
     std::string debugMsg = "sended: ";
     debugMsg += std::to_string(result);
     debugMsg += "bytes";
-    std::cout << debugMsg;
+    std::cout << debugMsg  << std::endl;
 
     if(result > 0){
             GuiInterface::addMessage(message);
@@ -74,5 +73,5 @@ Sender::~Sender()
     sender->join();
     delete sender;
     close(sock_icmp);
-    std::cout << "Sender deleted";
+    std::cout << "Sender deleted"  << std::endl;
 }

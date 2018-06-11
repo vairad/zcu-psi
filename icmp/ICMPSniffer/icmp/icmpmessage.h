@@ -1,6 +1,8 @@
 #ifndef ICMPMESSAGE_H
 #define ICMPMESSAGE_H
 
+#include "icmp/icmpdefinitions.h"
+
 #include <list>
 #include <unistd.h>
 #include <cstdint>
@@ -11,8 +13,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
-
-#include "icmp/icmpdefinitions.h"
 
 class ICMPMessage
 {

@@ -1,4 +1,4 @@
-#include "exceptions.h"
+#include "icmp/exceptions.h"
 
 DNSException::DNSException(const char *msg){
     this->msg = "";

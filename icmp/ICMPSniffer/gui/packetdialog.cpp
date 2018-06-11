@@ -1,9 +1,7 @@
-#include "packetdialog.h"
-
-#include <icmp/exceptions.h>
+#include "gui/packetdialog.h"
+#include "icmp/exceptions.h"
 
 #include <iostream>
-
 #include <QMessageBox>
 
 uint8_t PacketWindow::resolveCode()

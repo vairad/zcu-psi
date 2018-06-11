@@ -1,4 +1,4 @@
-#include "icmputils.h"
+#include "icmp/icmputils.h"
 
 #include <list>
 
@@ -33,6 +33,20 @@ uint16_t ICMPUtils::computeCheckSum(ICMPMessage &message)
     return ~sum;
 }
 
+
+/// ///////////////////////////////////////////////////////////////////
+/// Method computes ICMPv4 checksum.
+///
+/// The checksum is the 16-bit ones’s complement of the one’s
+/// complement sum of the ICMP message starting with the ICMP Type.
+/// For computing the checksum , the checksum field should be zero.
+/// If the total length is odd, the received data is padded with one
+/// octet of zeros for computing the checksum.
+///
+/// \brief ICMPUtils::computeCheckSum
+/// \param message object of ICMPMessage
+/// \return computed checsum
+///
 uint16_t ICMPUtils::computeCheckSum(uint16_t *byteArray, size_t dataLen){
     int nleft = dataLen;
     int sum = 0;

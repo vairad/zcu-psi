@@ -1,7 +1,7 @@
 #ifndef MESSENGER_H
 #define MESSENGER_H
 
-#include "messagequeue.h"
+#include "icmp/messagequeue.h"
 
 class Messenger
 {

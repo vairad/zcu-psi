@@ -1,7 +1,7 @@
 #include "reciever.h"
 #include "errorcodes.h"
-#include "icmpdefinitions.h"
-#include "icmpmessage.h"
+#include "icmp/icmpdefinitions.h"
+#include "icmp/icmpmessage.h"
 #include "gui/guiinterface.h"
 #include "icmp/messenger.h"
 
@@ -26,13 +26,13 @@ void Reciever::run(Reciever *object)
     while(Messenger::recieve()){
         object->recieve();
     }
-    std::cout << "Reciever thread end.";
+    std::cout << "Reciever thread end."  << std::endl;
 }
 
 Reciever::Reciever()
 {
     if((sock_eth = socket(AF_INET , SOCK_RAW , IPPROTO_ICMP)) < 0){
-        std::cerr << "Socket error";
+        std::cerr << "Socket error"  << std::endl;
          exit (ETH_SOCKET_ERROR);
     }
 
@@ -40,7 +40,7 @@ Reciever::Reciever()
     tv.tv_sec = 2;
     tv.tv_usec = 0;
     if(setsockopt(sock_eth, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv) < 0){
-        std::cerr << "Socket timeout oprtion error";
+        std::cerr << "Socket timeout oprtion error" << std::endl;
         exit (ETH_SOCKET_ERROR);
     }
 
@@ -52,7 +52,7 @@ Reciever::~Reciever()
    reciever->join();
    delete reciever;
    close(sock_eth);
-   std::cout << "Reciever deleted";
+   std::cout << "Reciever deleted" << std::endl;
 }
 
 void Reciever::recieve()
@@ -68,7 +68,7 @@ void Reciever::recieve()
    size_t dataLen = ret - (sizeof(struct ip) + sizeof( struct icmpHeader));
    if(dataLen > 0){
        std::string msg = "Recieved " + std::to_string(ret) +"bytes with " + std::to_string(dataLen) + "bytes of data.";
-       std::cout << msg.c_str();
+       std::cout << msg.c_str()  << std::endl;
 
        struct icmpHeader *header = new icmpHeader() ;
        memcpy(header, buf_incoming + sizeof (struct ip) , sizeof(struct icmpHeader));

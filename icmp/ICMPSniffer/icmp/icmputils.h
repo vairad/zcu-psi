@@ -1,8 +1,9 @@
 #ifndef ICMPUTILS_H
 #define ICMPUTILS_H
 
-#include <cstdint>
 #include "icmp/icmpmessage.h"
+
+#include <cstdint>
 
 class ICMPUtils
 {

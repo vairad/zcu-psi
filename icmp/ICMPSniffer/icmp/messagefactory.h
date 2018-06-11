@@ -1,7 +1,7 @@
 #ifndef MESSAGEFACTORY_H
 #define MESSAGEFACTORY_H
 
-#include "icmpmessage.h"
+#include "icmp/icmpmessage.h"
 
 #include <string>
 

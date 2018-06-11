@@ -1,17 +1,15 @@
 #include "gui/mainwindow.h"
-#include "packetdialog.h"
-#include "ui_mainwindow.h"
-
+#include "gui/packetdialog.h"
 #include "gui/packetcolumnorder.h"
+#include "ui_mainwindow.h"
+#include "icmp/exceptions.h"
+#include "icmp/messagefactory.h"
+#include "icmp/messenger.h"
 
 #include <QTableView>
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
-
-#include <icmp/exceptions.h>
-#include <icmp/messagefactory.h>
-#include <icmp/messenger.h>
 
 
 const double MainWindow::ColumnSourceSize = 0.15;

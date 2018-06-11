@@ -1,8 +1,6 @@
 #include <QApplication>
 #include <iostream>
 
-#include <icmp/messenger.h>
-
 #include "gui/guiinterface.h"
 #include "gui/mainwindow.h"
 #include "gui/packettablemodel.h"
@@ -10,6 +8,7 @@
 #include "icmp/icmputils.h"
 #include "icmp/sender.h"
 #include "icmp/reciever.h"
+#include "icmp/messenger.h"
 
 int testCheckSum(){
     ICMPMessage message;
@@ -19,11 +18,10 @@ int testCheckSum(){
     message.setSequenceNumber(9);
     uint16_t result = ICMPUtils::computeCheckSum(message);
     std::cout << std::hex << result;
+    return result;
 }
 
 int testSendEcho(){
-    Sender sender();
-
     ICMPMessage *message = new ICMPMessage();
     message->setType(icmpMessageType::Echo);
     message->setContent("TEST");
@@ -32,6 +30,7 @@ int testSendEcho(){
     message->setDestination("localhost");
 
     Messenger::getToSend().push_msg(message);
+    return message->getDataLength();
 }
 
 int runGuiApp(int argc, char* argv[]){

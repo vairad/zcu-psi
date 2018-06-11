@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "exceptions.h"
+#include "icmp/utils.h"
+#include "icmp/exceptions.h"
 
 #include <netdb.h>
 #include <ctime>

@@ -1,4 +1,4 @@
-#include "guiinterface.h"
+#include "gui/guiinterface.h"
 
 PacketTableModel * GuiInterface::messages;
 

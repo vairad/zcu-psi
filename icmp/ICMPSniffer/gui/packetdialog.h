@@ -1,11 +1,12 @@
 #ifndef PACKETDIALOG_H
 #define PACKETDIALOG_H
 
-#include <QDialog>
 
-#include <icmp/icmpmessage.h>
-
+#include "icmp/icmpmessage.h"
 #include "ui_packetdialog.h"
+
+
+#include <QDialog>
 
 namespace Ui {
 class PacketDialog;

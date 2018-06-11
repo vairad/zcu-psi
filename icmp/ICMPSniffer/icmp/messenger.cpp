@@ -1,4 +1,4 @@
-#include "messenger.h"
+#include "icmp/messenger.h"
 
 bool Messenger::sendFlag = true;
 bool Messenger::recieveFlag = true;
@@ -31,4 +31,5 @@ void Messenger::stopMessaging()
 {
     sendFlag = false;
     recieveFlag = false;
+    sendQueue.push_msg(new ICMPMessage());
 }

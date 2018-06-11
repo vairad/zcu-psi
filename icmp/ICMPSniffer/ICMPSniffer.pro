@@ -28,7 +28,6 @@ LIBS += -pthread
 SOURCES += \
         main.cpp \
         gui/mainwindow.cpp \
-    icmp/sniffer.cpp \
     icmp/icmputils.cpp \
     icmp/icmpmessage.cpp \
     icmp/sender.cpp \
@@ -45,7 +44,6 @@ SOURCES += \
 
 HEADERS += \
         gui/mainwindow.h \
-    icmp/sniffer.h \
     icmp/icmpdefinitions.h \
     icmp/icmputils.h \
     icmp/icmpmessage.h \
