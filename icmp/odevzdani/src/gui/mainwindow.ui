@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ICMP Generator</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="generateButton">
+        <property name="text">
+         <string>Vytvoř ICMP</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendLocalhostButton">
+        <property name="text">
+         <string>Echo localhost</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendEchoButton">
+        <property name="text">
+         <string>Echo hostname</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTableView" name="packets"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>900</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuP_ipojen">
+    <property name="title">
+     <string>Generátor zpráv</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionSendEchoLocalhost"/>
+    <addaction name="actionSendEcho"/>
+    <addaction name="actionGenerateICMP"/>
+   </widget>
+   <addaction name="menuP_ipojen"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionSendEchoLocalhost">
+   <property name="text">
+    <string>SendEcho - localhost</string>
+   </property>
+  </action>
+  <action name="actionSendEcho">
+   <property name="text">
+    <string>SendEcho</string>
+   </property>
+  </action>
+  <action name="actionGenerateICMP">
+   <property name="text">
+    <string>Vytvoř ICMP zprávu</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
